@@ -15,3 +15,13 @@ https://docs.google.com/document/d/1stdLBhcDwMrGnc2HJ8A4hwUpliWOEJ5aGcZkpJ2Vp8g/
 * PWA
 * HTML Canvas
 * JavaScript ES6
+
+## TODO
+* make player move via keyboard controls
+* make objects(benefit/harmful) appear randomly
+* collision
+* score
+* lives
+* increasing difficulty
+* data for each object (player, harm, benefit, game?) should be stored as JS Objects.
+* how to play
