@@ -9,8 +9,8 @@ class gameItem {
 
         this.itemType = itemType;
         this.yAxisMoveRate = 0;
-        // this.xAxisMoveRate = 0.3;
-        this.xAxisMoveRate = 1;
+        this.xAxisMoveRate = 0.3;
+        // this.xAxisMoveRate = 1;
 
         switch (itemType) {
             case 'img':

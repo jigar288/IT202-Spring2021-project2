@@ -17,7 +17,7 @@ function getRandomYPosition(){
 
 
 const playerItem = new gameItem(20, 25, 20, 60, './assets/airplane_2708.png', 'img');
-
+const livesText = new gameText(5, 10, '12px', 'SlateBlue', 'Arial', 'text')
 
 
 let harmfulItemsList = []
@@ -149,10 +149,13 @@ function redrawScene(){
         sceneCleanUp()                        
         playerItem.continueMovement();        
         styleCanvas()                        
-        playerItem.drawComponent()      
+        playerItem.drawComponent()     
+        
+        livesText.text = `Lives: ${gameData.lives}`;
+        livesText.redraw();
 
         // TODO: change the time that each object appears so they don't move in sync
-        manageHarmfulObjects()  
+        // manageHarmfulObjects()  
 
       
     }, 19);   

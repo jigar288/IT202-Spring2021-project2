@@ -29,11 +29,11 @@ https://docs.google.com/document/d/1stdLBhcDwMrGnc2HJ8A4hwUpliWOEJ5aGcZkpJ2Vp8g/
 
 ## ISSUES
 * player shouldn't move outside boundries
-* blurry images
+* blurry canvas elements - images, text, etc
 
 
 ## Smaller tasks
-- collision (respond to them? & alllow)
+- collision (respond to them? & allow)
 - benefit objects
     - multiple of them
     - random positions
