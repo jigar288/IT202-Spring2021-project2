@@ -17,7 +17,6 @@ https://docs.google.com/document/d/1stdLBhcDwMrGnc2HJ8A4hwUpliWOEJ5aGcZkpJ2Vp8g/
 * JavaScript ES6
 
 ## TODO
-* make player move via keyboard controls
 * make objects(benefit/harmful) appear randomly
 * collision
 * score
@@ -25,3 +24,24 @@ https://docs.google.com/document/d/1stdLBhcDwMrGnc2HJ8A4hwUpliWOEJ5aGcZkpJ2Vp8g/
 * increasing difficulty
 * data for each object (player, harm, benefit, game?) should be stored as JS Objects.
 * how to play
+* game theme w/ background image
+* PWA
+
+## ISSUES
+* player shouldn't move outside boundries
+* blurry images
+
+
+## Smaller tasks
+- collision (respond to them? & alllow)
+- benefit objects
+    - multiple of them
+    - random positions
+- Game Over
+    - all game animations should stop when game over 
+    - game over needs to be displayed in canvas environment
+
+
+## DONE?
+- collision w/ player
+- move left

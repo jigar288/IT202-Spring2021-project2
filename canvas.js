@@ -11,38 +11,28 @@ function styleCanvas(){
 
 styleCanvas()
 
-function gameItem(itemHeight, itemWidth, xPosition, yPosition, itemColor, itemType){
-
-    this.height = itemHeight
-    this.width = itemWidth
-    this.xPosition = xPosition;
-    this.yPosition = yPosition;
-    this.itemType = itemType
-    this.yAxisMoveRate = 0;
-
-    switch(itemType) {
-        case 'image':
-          this.imageObj = new Image(); //create a new image
-          this.imageObj.src = itemColor;
-          break;
-        default:
-          console.log('do nothing?')
-    }
-
-    this.drawComponent = () => {
-        if(itemType == 'image'){
-            canvasContext.imageSmoothingEnabled = true;
-            canvasContext.drawImage(this.imageObj, this.xPosition, this.yPosition, this.width, this.height);
-        }
-    }
-
-    this.continueMovement = () => {
-        this.yPosition += this.yAxisMoveRate
-    }
-    
+function getRandomYPosition(){
+    return Math.floor(Math.random()*(125-0+1)+0);
 }
 
-const playerItem = new gameItem(20, 25, 20, 60, './assets/airplane_2708.png', 'image');
+
+const playerItem = new gameItem(20, 25, 20, 60, './assets/airplane_2708.png', 'img');
+
+
+
+let harmfulItemsList = []
+
+function addHarmObjects(amountOfHarmObjs){
+    let i;
+    for(i = 0; i < amountOfHarmObjs; i++){
+        const randomYPosition = getRandomYPosition()
+        const harmfulItem = new gameItem(25, 25, 300, randomYPosition, './assets/missle.png', 'img');
+        harmfulItemsList.push(harmfulItem)
+        
+    }
+}
+
+addHarmObjects(3)
 
 function sceneCleanUp(){
     var canvas = document.getElementById('gameCanvas');
@@ -51,17 +41,31 @@ function sceneCleanUp(){
     canvasContext.clearRect(0, 0, width, height)
 }
 
-function redrawScene(){
+function getGameObjectProperties(gameObject){
+    const gameObjProperties = {
+        top: gameObject.yPosition,
+        bottom: gameObject.itemHeight + gameObject.yPosition,
+        left: gameObject.xPosition,
+        right: gameObject.itemWidth + gameObject.xPosition
+    }
 
+    return gameObjProperties;
+}
 
-    setInterval(function(){
-        sceneCleanUp()        
-        playerItem.continueMovement();
-        styleCanvas()                
-        playerItem.drawComponent()        
-        // archerImage.xPosition = archerImage.xPosition + 1
-    }, 20);    
+function areObjectsColliding(objectOne, objectTwo){
+    let areObjectColliding = true;
+    let objOneProperties = getGameObjectProperties(objectOne)
+    let objTwoProperties = getGameObjectProperties(objectTwo)
 
+    if( objOneProperties.top > objTwoProperties.bottom || objOneProperties.bottom < objTwoProperties.top || objOneProperties.left > objTwoProperties.right || objOneProperties.right < objTwoProperties.left ){
+        areObjectColliding = false
+    }
+
+    return areObjectColliding
+}
+
+function moveHarmObjectLeft(index){
+    harmfulItemsList[index].xPosition = harmfulItemsList[index].xPosition - harmfulItemsList[index].xAxisMoveRate;
 }
 
 function movePlayerUp(){
@@ -76,22 +80,105 @@ function haltPlayerMovement(){
     playerItem.yAxisMoveRate = 0;
 }
 
-// key was pressed
-window.addEventListener('keydown', function (event) {
-    if(event.keyCode == 38){
-        movePlayerUp()
-    }else if(event.keyCode == 40){
-        movePlayerDown()
+function rePositionHarmObj(harmObj){
+    harmObj.xPosition = 300; //reset x position to right side of canvas
+    harmObj.yPosition = getRandomYPosition(); // pick a random y position in range
+    harmObj.xAxisMoveRate += getRandomSpeedInRange(); //make the object speed faster as game progresses
+}
+
+
+function manageGameObjectCollision(harmfulItem){    
+    let i;
+    for(i = 0; i < harmfulItemsList.length; i++){
+        const harmfulItem = harmfulItemsList[i]
+        if(areObjectsColliding(playerItem, harmfulItem)){
+            rePositionHarmObj(harmfulItem)
+            decrementLives();
+            if(isGameOver()){
+                alert('Game Over!!!!')
+            }
+        }     
+    }    
+    
+}
+
+function getRandomSpeedInRange(){
+    return Math.floor(Math.random()*(0.3-0.1+1));
+}
+
+function manageHarmfulObjects(){
+    let i;
+    for(i = 0; i < harmfulItemsList.length; i++){
+        moveHarmObjectLeft(i)
+        harmfulItemsList[i].drawComponent()        
+
+        if(harmfulItemsList[i].xPosition <= -30){
+            rePositionHarmObj(harmfulItemsList[i])
+        }        
     }
+}
+
+// 
+
+/**
+ * 
+ * pick a range to respawn: 
+ *  min y = 125, max y = 0
+ * 
+ * min x = 
+ * max x = 
+ * 
+ * canvas size is width (x): 300 height(y): 150
+ * 
+ * re-position when x = less than -30
+ * 
+ * TODO: complete nice to have tasks
+ * 
+ * ? Nice to have
+ * - start at random speeds in a range
+ * - ensure that two harm objects don't have same y position based on height of item
+ * 
+ */
+// manually create a few objects & reposition them after they go out of bounds
+function redrawScene(){
+
+    setInterval(function(){
+        manageGameObjectCollision() // TODO: show alert to stop game if lives finished & then refresh page to restart
+        
+
+        sceneCleanUp()                        
+        playerItem.continueMovement();        
+        styleCanvas()                        
+        playerItem.drawComponent()      
+
+        // TODO: change the time that each object appears so they don't move in sync
+        manageHarmfulObjects()  
+
+      
+    }, 19);   
+
+}
+
+// key was pressed
+window.addEventListener('keydown', function (event) {    
+    const keyCode = event.keyCode;
+
+    switch(keyCode) {
+        case 38:
+            movePlayerUp();
+            break;
+        case 40:
+            movePlayerDown();
+            break;
+        default:
+            console.log('do nothing?')
+    }    
 })
 
 // key was released
 window.addEventListener('keyup', function (event) {
     haltPlayerMovement()
 })
-
-down = 40
-up = 38
 
 redrawScene()
 
