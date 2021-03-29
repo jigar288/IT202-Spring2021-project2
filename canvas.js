@@ -24,8 +24,9 @@ const playerItem = new gameItem(20, 25, 20, 60, './assets/airplane_2708.png', 'i
 const livesText = new gameText(5, 10, '12px', 'SlateBlue', 'Arial', 'text')
 const scoreText = new gameText(50, 10, '12px', 'SlateBlue', 'Arial', 'text')
 const levelText = new gameText(100, 10, '12px', 'SlateBlue', 'Arial', 'text')
+const gameOverText = new gameText(5, 100, '11px', 'red', 'Arial', 'text')
 
-const benefitItem = new gameItem(15, 15, 300, getRandomYPosition(), './assets/pump.png', 'img', 1);
+const benefitItem = new gameItem(15, 15, 300, getRandomYPosition(), './assets/pump.png', 'img', 0.3);
 
 
 let harmfulItemsList = []
@@ -101,9 +102,9 @@ function manageGameObjectCollision(harmfulItem){
         if(areObjectsColliding(playerItem, harmfulItem)){
             repositionObject(harmfulItem)
             decrementLives();
-            if(isGameOver()){
-                alert('Game Over!!!!')
-            }
+            // if(isGameOver()){
+            //     isGameOver = true;
+            // }
         }     
     }   
     
@@ -143,25 +144,10 @@ function manageBenefitObject(){
     }
 }
 
-// 
-
-/**
- * 
- * pick a range to respawn: 
- *  min y = 125, max y = 0
- * 
- * canvas size is width (x): 300 height(y): 150
- * 
- * re-position when x = less than -30
- * 
- */
-// manually create a few objects & reposition them after they go out of bounds
 function redrawScene(){
 
-    setInterval(function(){
+    const intervalVar = setInterval(function(){
         manageGameObjectCollision() // TODO: show alert to stop game if lives finished & then refresh page to restart
-
-
 
         sceneCleanUp()              
                   
@@ -180,14 +166,20 @@ function redrawScene(){
         levelText.text = `Level: ${gameData.level}`
         levelText.redraw()
 
+
+
         manageHarmfulObjects()  
         manageBenefitObject()
 
-        
-        
+        if(isGameOver()){
+            gameOverText.text = `Game Over: reload & click start to play again`
+            gameOverText.redraw()
+            clearInterval(intervalVar)
+        }        
 
-      
-    }, 19);   
+    }, 19);  
+    
+    
 
 }
 
@@ -212,5 +204,5 @@ window.addEventListener('keyup', function (event) {
     haltPlayerMovement()
 })
 
-redrawScene()
+// redrawScene()
 
