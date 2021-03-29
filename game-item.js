@@ -1,5 +1,5 @@
 class gameItem {
-    constructor(itemHeight, itemWidth, xPosition, yPosition, itemFilePath, itemType) {
+    constructor(itemHeight, itemWidth, xPosition, yPosition, itemFilePath, itemType, xAxisMoveRate) {
 
         this.itemHeight = itemHeight;
         this.itemWidth = itemWidth;
@@ -9,8 +9,7 @@ class gameItem {
 
         this.itemType = itemType;
         this.yAxisMoveRate = 0;
-        this.xAxisMoveRate = 0.3;
-        // this.xAxisMoveRate = 1;
+        this.xAxisMoveRate = xAxisMoveRate;
 
         switch (itemType) {
             case 'img':

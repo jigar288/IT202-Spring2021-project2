@@ -1,14 +1,19 @@
 let gameData = {
     score: 0,
-    lives: 3
+    lives: 3,
+    level: 1
 }
 
 function decrementLives(){
     gameData.lives = gameData.lives - 1;
 }
 
-function increaseScore(scoreAmount){
-    gameData.score += scoreAmount
+function incrementScore(){
+    gameData.score += 1;
+}
+
+function increaseLevel(){
+    gameData.level += 1;
 }
 
 function isGameOver(){

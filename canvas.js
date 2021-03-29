@@ -12,12 +12,20 @@ function styleCanvas(){
 styleCanvas()
 
 function getRandomYPosition(){
-    return Math.floor(Math.random()*(125-0+1)+0);
+    return Math.random()*(125-0+1);
 }
 
+function getRandomSpeedInRange(){
+    return Math.random()*(0.3-0.1+1);
+}
 
-const playerItem = new gameItem(20, 25, 20, 60, './assets/airplane_2708.png', 'img');
+const backgroundImage = new gameItem(150, 300, 0, 0, 'https://static.vecteezy.com/system/resources/previews/000/538/717/non_2x/vector-illustration-clouds-on-blue-sky-background.jpg', 'img', 0)
+const playerItem = new gameItem(20, 25, 20, 60, './assets/airplane_2708.png', 'img', 0.3);
 const livesText = new gameText(5, 10, '12px', 'SlateBlue', 'Arial', 'text')
+const scoreText = new gameText(50, 10, '12px', 'SlateBlue', 'Arial', 'text')
+const levelText = new gameText(100, 10, '12px', 'SlateBlue', 'Arial', 'text')
+
+const benefitItem = new gameItem(15, 15, 300, getRandomYPosition(), './assets/pump.png', 'img', 1);
 
 
 let harmfulItemsList = []
@@ -26,13 +34,13 @@ function addHarmObjects(amountOfHarmObjs){
     let i;
     for(i = 0; i < amountOfHarmObjs; i++){
         const randomYPosition = getRandomYPosition()
-        const harmfulItem = new gameItem(25, 25, 300, randomYPosition, './assets/missle.png', 'img');
-        harmfulItemsList.push(harmfulItem)
-        
+        const randomSpeed = getRandomSpeedInRange()
+        const harmfulItem = new gameItem(15, 15, 300, randomYPosition, './assets/missle-2.png', 'img', randomSpeed);
+        harmfulItemsList.push(harmfulItem)        
     }
 }
 
-addHarmObjects(3)
+addHarmObjects(1)
 
 function sceneCleanUp(){
     var canvas = document.getElementById('gameCanvas');
@@ -80,31 +88,36 @@ function haltPlayerMovement(){
     playerItem.yAxisMoveRate = 0;
 }
 
-function rePositionHarmObj(harmObj){
+function repositionObject(harmObj){
     harmObj.xPosition = 300; //reset x position to right side of canvas
     harmObj.yPosition = getRandomYPosition(); // pick a random y position in range
     harmObj.xAxisMoveRate += getRandomSpeedInRange(); //make the object speed faster as game progresses
 }
-
 
 function manageGameObjectCollision(harmfulItem){    
     let i;
     for(i = 0; i < harmfulItemsList.length; i++){
         const harmfulItem = harmfulItemsList[i]
         if(areObjectsColliding(playerItem, harmfulItem)){
-            rePositionHarmObj(harmfulItem)
+            repositionObject(harmfulItem)
             decrementLives();
             if(isGameOver()){
                 alert('Game Over!!!!')
             }
         }     
-    }    
+    }   
+    
+    if(areObjectsColliding(playerItem, benefitItem)){
+        repositionObject(benefitItem)
+        incrementScore()
+        if(gameData.score % 2 == 0){
+            increaseLevel()
+        }
+    }
     
 }
 
-function getRandomSpeedInRange(){
-    return Math.floor(Math.random()*(0.3-0.1+1));
-}
+
 
 function manageHarmfulObjects(){
     let i;
@@ -113,8 +126,20 @@ function manageHarmfulObjects(){
         harmfulItemsList[i].drawComponent()        
 
         if(harmfulItemsList[i].xPosition <= -30){
-            rePositionHarmObj(harmfulItemsList[i])
+            repositionObject(harmfulItemsList[i])
+            if(harmfulItemsList.length < 4){
+                addHarmObjects(1)
+            }
         }        
+    }
+}
+
+function manageBenefitObject(){
+    benefitItem.xPosition = benefitItem.xPosition - benefitItem.xAxisMoveRate;
+    benefitItem.drawComponent()
+
+    if(benefitItem.xPosition <= -30){
+        repositionObject(benefitItem)
     }
 }
 
@@ -125,18 +150,9 @@ function manageHarmfulObjects(){
  * pick a range to respawn: 
  *  min y = 125, max y = 0
  * 
- * min x = 
- * max x = 
- * 
  * canvas size is width (x): 300 height(y): 150
  * 
  * re-position when x = less than -30
- * 
- * TODO: complete nice to have tasks
- * 
- * ? Nice to have
- * - start at random speeds in a range
- * - ensure that two harm objects don't have same y position based on height of item
  * 
  */
 // manually create a few objects & reposition them after they go out of bounds
@@ -144,18 +160,31 @@ function redrawScene(){
 
     setInterval(function(){
         manageGameObjectCollision() // TODO: show alert to stop game if lives finished & then refresh page to restart
-        
 
-        sceneCleanUp()                        
+
+
+        sceneCleanUp()              
+                  
         playerItem.continueMovement();        
-        styleCanvas()                        
-        playerItem.drawComponent()     
         
+        styleCanvas()                        
+        backgroundImage.drawComponent()  
+        playerItem.drawComponent()   
+                
         livesText.text = `Lives: ${gameData.lives}`;
         livesText.redraw();
 
-        // TODO: change the time that each object appears so they don't move in sync
-        // manageHarmfulObjects()  
+        scoreText.text = `Score: ${gameData.score}`
+        scoreText.redraw();
+
+        levelText.text = `Level: ${gameData.level}`
+        levelText.redraw()
+
+        manageHarmfulObjects()  
+        manageBenefitObject()
+
+        
+        
 
       
     }, 19);   

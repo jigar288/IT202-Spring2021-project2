@@ -17,30 +17,22 @@ https://docs.google.com/document/d/1stdLBhcDwMrGnc2HJ8A4hwUpliWOEJ5aGcZkpJ2Vp8g/
 * JavaScript ES6
 
 ## TODO
-* make objects(benefit/harmful) appear randomly
-* collision
-* score
-* lives
-* increasing difficulty
 * data for each object (player, harm, benefit, game?) should be stored as JS Objects.
-* how to play
 * game theme w/ background image
 * PWA
+* how to play
 
-## ISSUES
-* player shouldn't move outside boundries
-* blurry canvas elements - images, text, etc
 
 
 ## Smaller tasks
-- collision (respond to them? & allow)
-- benefit objects
-    - multiple of them
-    - random positions
 - Game Over
     - all game animations should stop when game over 
     - game over needs to be displayed in canvas environment
 
+## Nice to have
+- restart game button
+- ensure that two harm objects don't have same y position based on height of item
+* player shouldn't move outside boundries
 
 ## DONE?
 - collision w/ player
